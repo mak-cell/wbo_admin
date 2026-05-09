@@ -1,0 +1,106 @@
+# Weddingbellodisha Studio Management System - Technical Foundation
+
+## 1. Database Schema (Python/SQLAlchemy)
+```python
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Enum, JSON
+from sqlalchemy.orm import relationship, declarative_base
+import enum
+
+Base = declarative_base()
+
+class Role(enum.Enum):
+    ADMIN = "Admin"
+    SHOOTER = "Shooter"
+    EDITOR = "Editor"
+
+class ProjectStatus(enum.Enum):
+    PENDING = "Pending"
+    IN_PROGRESS = "In Progress"
+    REVIEW = "Review"
+    DELIVERED = "Delivered"
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    contact = Column(String)
+    role = Column(Enum(Role))
+    assignments = relationship("TaskAssignment", back_populates="worker")
+
+class Project(Base):
+    __tablename__ = "projects"
+    id = Column(Integer, primary_key=True)
+    client_name = Column(String)
+    location = Column(String)
+    contact_number = Column(String)
+    total_budget = Column(Float) # INR
+    status = Column(Enum(ProjectStatus))
+    
+    events = relationship("Event", back_populates="project")
+    deliverables = relationship("Deliverable", back_populates="project")
+    payments = relationship("Payment", back_populates="project")
+
+class Event(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    event_type = Column(String) # Prewedding, Engagement, Mehendi, etc.
+    event_date = Column(Date)
+    project = relationship("Project", back_populates="events")
+
+class Deliverable(Base):
+    __tablename__ = "deliverables"
+    id = Column(Integer, primary_key=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    category = Column(String) # Photos, Videos, Reels
+    details = Column(JSON) # Store specific counts/sizes (e.g., {"edited_count": 50, "album_pages": 30})
+    project = relationship("Project", back_populates="deliverables")
+
+class Payment(Base):
+    __tablename__ = "payments"
+    id = Column(Integer, primary_key=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    milestone = Column(String) # Advance (15%), etc.
+    amount = Column(Float)
+    is_paid = Column(Integer, default=0) # 0: Pending, 1: Paid
+    project = relationship("Project", back_populates="payments")
+
+class TaskAssignment(Base):
+    __tablename__ = "task_assignments"
+    id = Column(Integer, primary_key=True)
+    worker_id = Column(Integer, ForeignKey("users.id"))
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    task_description = Column(String)
+    status = Column(Enum(ProjectStatus))
+    worker = relationship("User", back_populates="assignments")
+```
+
+## 2. API Endpoints (FastAPI)
+- `POST /projects/`: Create a new project (Intake Form).
+- `GET /projects/{id}`: Fetch project details.
+- `GET /dashboard/summary`: Admin stats (Revenue, Active Projects).
+- `GET /worker/tasks/{worker_id}`: Fetch upcoming assignments for shooters/editors.
+- `PATCH /payments/{id}`: Update payment status.
+
+## 3. Flutter Project Structure
+```text
+lib/
+├── core/
+│   ├── constants/
+│   ├── theme/
+│   └── utils/
+├── data/
+│   ├── models/
+│   ├── repositories/
+│   └── providers/
+├── ui/
+│   ├── screens/
+│   │   ├── admin/
+│   │   │   ├── dashboard_screen.dart
+│   │   │   └── intake_form_screen.dart
+│   │   ├── worker/
+│   │   │   └── task_view_screen.dart
+│   │   └── common/
+│   └── widgets/
+└── main.dart
+```

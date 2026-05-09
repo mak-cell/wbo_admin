@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Weddingbell - Client Project Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#785a1a",
+                        "on-tertiary-container": "#838482",
+                        "on-secondary-fixed": "#261900",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "surface-container-high": "#e9e8e7",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e3e2e0",
+                        "primary-fixed": "#e5e2e1",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#444748",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "tertiary-container": "#1a1c1b",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-primary-fixed": "#1c1b1b",
+                        "on-primary-container": "#858383",
+                        "inverse-surface": "#303031",
+                        "surface-variant": "#e4e2e2",
+                        "surface-dim": "#dbdad9",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fbf9f8",
+                        "secondary-fixed": "#ffdea5",
+                        "secondary-container": "#fed488",
+                        "on-surface": "#1b1c1c",
+                        "primary": "#000000",
+                        "on-tertiary-fixed-variant": "#464746",
+                        "error-container": "#ffdad6",
+                        "secondary": "#775a19",
+                        "surface": "#fbf9f8",
+                        "surface-container-highest": "#e4e2e2",
+                        "outline-variant": "#c4c7c7",
+                        "error": "#ba1a1a",
+                        "primary-container": "#1c1b1b",
+                        "surface-container": "#efeded",
+                        "inverse-on-surface": "#f2f0f0",
+                        "on-primary-fixed-variant": "#474646",
+                        "outline": "#747878",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f5f3f3",
+                        "tertiary-fixed-dim": "#c7c6c5",
+                        "surface-tint": "#5f5e5e",
+                        "inverse-primary": "#c8c6c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "section-gap": "64px",
+                        "gutter": "24px",
+                        "margin-page": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Manrope"],
+                        "headline-h1": ["Playfair Display"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Manrope"],
+                        "headline-h2": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-h1": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-h2": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col z-50 bg-primary shadow-2xl docked left-0 h-full w-64">
+<div class="px-6 py-8">
+<h1 class="font-display-lg text-headline-h2 text-on-primary">Weddingbell</h1>
+<p class="font-label-sm text-label-sm text-primary-fixed-dim mt-1">Odisha Studio</p>
+</div>
+<div class="px-6 mb-8">
+<button class="w-full bg-secondary text-on-secondary font-label-sm text-label-sm py-3 px-4 rounded flex items-center justify-center gap-2 hover:bg-secondary-container hover:text-on-secondary-container transition-colors duration-200 shadow-sm scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">add</span>
+                New Project
+            </button>
+</div>
+<ul class="flex-1 flex flex-col gap-2 w-full">
+<li>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="text-secondary font-bold border-r-4 border-secondary px-6 py-4 flex items-center gap-4 bg-primary-container hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">camera_roll</span>
+<span class="font-body-md text-body-md">Projects</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Financials</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Team</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-body-md text-body-md">Calendar</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto pb-8 w-full flex flex-col gap-2">
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 flex flex-col min-h-screen w-full">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-gutter sticky top-0 z-40 bg-surface/80 backdrop-blur-md shadow-sm border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer transition-all active:opacity-80 md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex gap-6">
+<!-- Navigation links would go here if any -->
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded border-none focus:ring-1 focus:ring-secondary text-body-md font-body-md text-on-surface w-64 placeholder:text-on-surface-variant" placeholder="Search..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer transition-all active:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer transition-all active:opacity-80 md:hidden">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+<img alt="Admin User" class="w-8 h-8 rounded-full object-cover" data-alt="A close-up portrait of a professional studio manager. High-end, clean aesthetic with soft natural lighting. Corporate yet approachable mood, aligning with a premium minimalist design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjOYJo6Fm0Kfnu2B65CwHgwkYrLsauGJPgCJD63QWHQb7MFzjESGq5F6MYWMvmeppPlnV1r1H4xzPJj3WOBtMOnWrOnUuKAO4NDtE3pWBMyM_vyecgHKUQ4pO3_FvZOg6fD61LKrgdOxMlsgyf--59c56ELzy4hDJARsfmsKBWIHmj-wgm7-NXIA0XzOjxvWiHmEYwWvQXqmvg3qTz4mcYfg91dsS-mBZ8VfczHWZzBI6d0_tZux5Amj6jqz7mTyqQihL5ylzdovhV"/>
+<span class="font-label-sm text-label-sm text-primary hidden lg:inline-block">Profile</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<main class="flex-1 p-margin-page overflow-y-auto">
+<div class="max-w-container-max mx-auto space-y-section-gap">
+<!-- Project Header -->
+<section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-surface-container-high pb-8">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded font-label-sm text-label-sm uppercase tracking-wider">Wedding Project</span>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] icon-fill">sync</span>
+                                Shooting Complete - Editing in Progress
+                            </span>
+</div>
+<h2 class="font-headline-h1 text-headline-h1 text-primary mb-2">Aarav &amp; Meera</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                            12th - 14th November 2024 • Bhubaneswar
+                        </p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 border border-secondary text-secondary rounded font-label-sm text-label-sm hover:bg-secondary/5 transition-colors duration-200">View Gallery</button>
+<button class="px-6 py-3 bg-primary text-on-primary rounded font-label-sm text-label-sm hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                            Share Status
+                        </button>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Left Column: Milestone & Deliverables -->
+<div class="lg:col-span-2 space-y-section-gap">
+<!-- Milestone Tracker -->
+<section class="bg-surface-container-lowest p-8 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-variant">
+<h3 class="font-headline-h2 text-headline-h2 text-primary mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">timeline</span>
+                                Project Milestones
+                            </h3>
+<div class="relative">
+<!-- Connecting Line -->
+<div class="absolute left-6 top-6 bottom-6 w-px bg-surface-variant z-0"></div>
+<div class="space-y-8 relative z-10">
+<!-- Stage 1: Done -->
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shrink-0 border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined icon-fill">check</span>
+</div>
+<div class="pt-2">
+<h4 class="font-body-lg text-body-lg text-primary font-bold">Booking &amp; Advance</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">20% initial payment received.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2">Aug 15, 2024</p>
+</div>
+</div>
+<!-- Stage 2: Done -->
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shrink-0 border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined icon-fill">check</span>
+</div>
+<div class="pt-2">
+<h4 class="font-body-lg text-body-lg text-primary font-bold">Event Execution</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Sangeet, Wedding, and Reception coverage completed.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2">Nov 14, 2024</p>
+</div>
+</div>
+<!-- Stage 3: In Progress (Active) -->
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest border-2 border-secondary text-secondary flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(119,90,25,0.2)]">
+<span class="material-symbols-outlined animate-pulse">edit</span>
+</div>
+<div class="pt-2">
+<h4 class="font-body-lg text-body-lg text-secondary font-bold">Post-Production &amp; Editing</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Culling, color grading, and video editing underway.</p>
+<p class="font-label-sm text-label-sm text-secondary mt-2">Currently Active</p>
+</div>
+</div>
+<!-- Stage 4: Pending -->
+<div class="flex items-start gap-6 opacity-50">
+<div class="w-12 h-12 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0 border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+<div class="pt-2">
+<h4 class="font-body-lg text-body-lg text-primary font-bold">Client Review</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Draft deliverables shared for feedback.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2">Expected: Dec 05, 2024</p>
+</div>
+</div>
+<!-- Stage 5: Pending -->
+<div class="flex items-start gap-6 opacity-50">
+<div class="w-12 h-12 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0 border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined">package_2</span>
+</div>
+<div class="pt-2">
+<h4 class="font-body-lg text-body-lg text-primary font-bold">Final Delivery</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Physical albums and final digital assets handed over.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Financials, Team, Deliverables -->
+<div class="space-y-section-gap">
+<!-- Financial Summary -->
+<section class="bg-surface-container-lowest p-8 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-variant">
+<h3 class="font-headline-h2 text-headline-h2 text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">account_balance_wallet</span>
+                                Financial Summary
+                            </h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Budget</span>
+<span class="font-headline-h2 text-headline-h2 text-primary">₹3,50,000</span>
+</div>
+</div>
+<div class="space-y-3 pt-4 border-t border-surface-variant">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Paid
+                                        </span>
+<span class="font-body-md text-body-md text-primary font-semibold">₹1,50,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-surface-variant"></span> Pending
+                                        </span>
+<span class="font-body-md text-body-md text-primary font-semibold">₹2,000,000</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[42%]"></div>
+</div>
+<div class="bg-surface-container-high p-4 rounded mt-4 flex items-start gap-3">
+<span class="material-symbols-outlined text-on-surface-variant mt-0.5 text-[20px]">info</span>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Next Installment Due</p>
+<p class="font-body-md text-body-md text-primary mt-1">₹1,00,000 on Delivery of Drafts</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Deliverables Status Grid -->
+<section class="bg-surface-container-lowest p-8 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-variant">
+<h3 class="font-headline-h2 text-headline-h2 text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+                                Deliverables
+                            </h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Photos -->
+<div class="p-4 bg-surface rounded border border-surface-variant">
+<span class="material-symbols-outlined text-secondary mb-2">photo_library</span>
+<h4 class="font-body-md text-body-md text-primary font-bold">Photos</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">1250 / 2000 Edited</p>
+</div>
+<!-- Teaser -->
+<div class="p-4 bg-secondary-container rounded border border-secondary/20">
+<span class="material-symbols-outlined text-on-secondary-container mb-2 icon-fill">movie</span>
+<h4 class="font-body-md text-body-md text-on-secondary-fixed font-bold">Teaser</h4>
+<p class="font-label-sm text-label-sm text-on-secondary-container mt-1">Ready for Review</p>
+</div>
+<!-- Highlight Video -->
+<div class="p-4 bg-surface rounded border border-surface-variant">
+<span class="material-symbols-outlined text-on-surface-variant mb-2">video_library</span>
+<h4 class="font-body-md text-body-md text-primary font-bold">Highlights</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">In Progress (60%)</p>
+</div>
+<!-- Reels -->
+<div class="p-4 bg-surface rounded border border-surface-variant">
+<span class="material-symbols-outlined text-on-surface-variant mb-2">smartphone</span>
+<h4 class="font-body-md text-body-md text-primary font-bold">Reels</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">2 / 5 Completed</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Team Section (Full width at bottom) -->
+<section class="bg-surface-container-lowest p-8 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-variant">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-h2 text-headline-h2 text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">groups</span>
+                            Assigned Team
+                        </h3>
+<button class="font-label-sm text-label-sm text-secondary hover:underline">Manage Team</button>
+</div>
+<div class="flex flex-wrap gap-4">
+<!-- Team Member 1 -->
+<div class="flex items-center gap-3 p-3 pr-6 rounded-full border border-surface-variant bg-surface hover:shadow-sm transition-shadow">
+<img alt="Lead Photographer" class="w-10 h-10 rounded-full object-cover" data-alt="A portrait of a male professional photographer. Clean studio lighting, modern minimalist aesthetic. High-contrast neutral tones suitable for a high-end brand profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe2uS5ZKZO0Zrg0-D9zzKQrGm82uZk3IHfb1e9BJsstcD8DaJzkaI5xZvYB9l4jnu-7KjuVVKmRSrFFfDswjd56GR_IwKaDyTQT_WD7OqloIopZbWSU947nLqJh6q7GcWKtlX-oApRXd5EB0cjT65EflBDGCtq8M0LENWW6smRzvH8wkiuWl_zirOz4sTceUQVixoumUvpY1gR2qBo6NsDugEOPUPFS-FX-YAKpjf9e571T5I1bHPbswU0W2_4LXqdMwbouwq0tfSg"/>
+<div>
+<p class="font-body-md text-body-md text-primary font-bold leading-tight">Rahul D.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Lead Photographer</p>
+</div>
+</div>
+<!-- Team Member 2 -->
+<div class="flex items-center gap-3 p-3 pr-6 rounded-full border border-surface-variant bg-surface hover:shadow-sm transition-shadow">
+<img alt="Lead Cinematographer" class="w-10 h-10 rounded-full object-cover" data-alt="A portrait of a female professional videographer. Clean studio lighting, modern minimalist aesthetic. High-contrast neutral tones suitable for a high-end brand profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRzw367bs5F-hRHQuMx4Q9cdqjO7lmsqh1P_Eos43mQ3oy3P1i1jII67zq9JpNGrXCdNEsYxXXSmHwag6rKMxvFZVWPojXQb-wu104n-AudOkt0wEm-uAdp4FZhZ78t12JtdYejfZJ0r3H2QPo4wBgTEXtA_A54iD2yvNpvA1g3lnGCWX2KEDf1S9IRQN10ICcMzOQznGRFs8EMF7fIf-XrCgJg7rg73ET3VF-HE54Ee2xDGZ2zPlUA5g1I2pO6BMX5Oggo0bEb5QT"/>
+<div>
+<p class="font-body-md text-body-md text-primary font-bold leading-tight">Sneha K.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Lead Cinematographer</p>
+</div>
+</div>
+<!-- Team Member 3 -->
+<div class="flex items-center gap-3 p-3 pr-6 rounded-full border border-secondary/20 bg-secondary/5 hover:shadow-sm transition-shadow">
+<div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">movie_edit</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary font-bold leading-tight">Vikram M.</p>
+<p class="font-label-sm text-label-sm text-secondary">Senior Video Editor</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

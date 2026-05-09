@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Weddingbellodisha - Digital Intake Form</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#c8c6c5",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e5e2e1",
+                        "background": "#fbf9f8",
+                        "on-primary-fixed-variant": "#474646",
+                        "on-secondary-container": "#785a1a",
+                        "on-surface-variant": "#444748",
+                        "surface-tint": "#5f5e5e",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-high": "#e9e8e7",
+                        "surface-dim": "#dbdad9",
+                        "secondary-fixed": "#ffdea5",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#1a1c1b",
+                        "surface-bright": "#fbf9f8",
+                        "outline-variant": "#c4c7c7",
+                        "surface": "#fbf9f8",
+                        "inverse-surface": "#303031",
+                        "on-tertiary-fixed-variant": "#464746",
+                        "tertiary-fixed": "#e3e2e0",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#838482",
+                        "surface-variant": "#e4e2e2",
+                        "on-primary-fixed": "#1c1b1b",
+                        "secondary-fixed-dim": "#e9c176",
+                        "secondary-container": "#fed488",
+                        "on-background": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#775a19",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#858383",
+                        "outline": "#747878",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f5f3f3",
+                        "primary": "#000000",
+                        "tertiary-fixed-dim": "#c7c6c5",
+                        "surface-container-highest": "#e4e2e2",
+                        "inverse-on-surface": "#f2f0f0",
+                        "tertiary": "#000000",
+                        "surface-container": "#efeded",
+                        "on-secondary-fixed": "#261900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-page": "48px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "headline-h2": ["Playfair Display"],
+                        "label-sm": ["Manrope"],
+                        "headline-h1": ["Playfair Display"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-h2": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-h1": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #fbf9f8; color: #1b1c1c; }
+        .input-floating { position: relative; }
+        .input-floating input, .input-floating select, .input-floating textarea {
+            width: 100%; border: none; border-bottom: 1px solid #c4c7c7; background: transparent;
+            padding: 24px 0 8px 0; outline: none; transition: border-color 0.2s; font-family: 'Manrope', sans-serif;
+        }
+        .input-floating input:focus, .input-floating select:focus, .input-floating textarea:focus { border-bottom-color: #775a19; }
+        .input-floating label {
+            position: absolute; top: 24px; left: 0; pointer-events: none; transition: 0.2s ease all;
+            color: #444748; font-family: 'Manrope', sans-serif; font-size: 16px;
+        }
+        .input-floating input:focus ~ label, .input-floating input:not(:placeholder-shown) ~ label,
+        .input-floating select:focus ~ label, .input-floating select:not([value=""]) ~ label,
+        .input-floating textarea:focus ~ label, .input-floating textarea:not(:placeholder-shown) ~ label {
+            top: 0; font-size: 12px; color: #775a19; font-weight: 600; letter-spacing: 0.05em;
+        }
+        
+        /* Custom Checkbox */
+        .custom-checkbox {
+            appearance: none; background-color: #fbf9f8; margin: 0; font: inherit;
+            color: currentColor; width: 20px; height: 20px; border: 1px solid #c4c7c7;
+            border-radius: 0.125rem; display: grid; place-content: center; cursor: pointer;
+        }
+        .custom-checkbox::before {
+            content: ""; width: 12px; height: 12px; transform: scale(0);
+            transition: 120ms transform ease-in-out; box-shadow: inset 1em 1em #775a19;
+            background-color: #775a19; transform-origin: center; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        .custom-checkbox:checked::before { transform: scale(1); }
+        .custom-checkbox:checked { border-color: #775a19; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex">
+<!-- SideNavBar (Suppressed as this is a transactional flow, but kept minimal if required by prompt. Suppressing as per rules for linear/transactional forms) -->
+<!-- Suppressed SideNavBar for Data Intake Form to prioritize canvas -->
+<main class="flex-1 flex flex-col w-full relative">
+<!-- TopAppBar (Suppressed for immersive form experience, replaced with simple back button header) -->
+<header class="w-full flex justify-between items-center h-16 px-gutter bg-surface/80 backdrop-blur-md sticky top-0 z-40">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors group">
+<span class="material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Back to Dashboard</span>
+</button>
+<div class="font-headline-h2 text-headline-h2 text-primary">Weddingbell</div>
+<div class="w-24"></div> <!-- Spacer -->
+</header>
+<div class="max-w-[800px] w-full mx-auto px-gutter py-section-gap pb-32">
+<div class="mb-16 text-center">
+<h1 class="font-display-lg text-display-lg text-primary mb-4">Client Intake Form</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Please complete all necessary details for the upcoming event to formalize the booking and set the milestone schedule.</p>
+</div>
+<form class="space-y-16">
+<!-- Section: Client Details -->
+<section class="bg-surface-container-lowest p-8 lg:p-12 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-container-highest relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<h2 class="font-headline-h1 text-headline-h1 text-primary mb-8 border-b border-surface-variant pb-4">Client Information</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+<div class="input-floating md:col-span-2">
+<input id="couple_names" placeholder=" " required="" type="text"/>
+<label for="couple_names">Couple's Names (e.g., Anjali &amp; Rahul)</label>
+</div>
+<div class="input-floating">
+<input id="primary_email" placeholder=" " required="" type="email"/>
+<label for="primary_email">Primary Email Address</label>
+</div>
+<div class="input-floating">
+<input id="primary_phone" placeholder=" " required="" type="tel"/>
+<label for="primary_phone">Primary Contact Number</label>
+</div>
+<div class="input-floating md:col-span-2">
+<input id="wedding_location" placeholder=" " required="" type="text"/>
+<label for="wedding_location">Primary Wedding City / Venue</label>
+</div>
+</div>
+</section>
+<!-- Section: Event Details -->
+<section class="bg-surface-container-lowest p-8 lg:p-12 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-container-highest">
+<h2 class="font-headline-h1 text-headline-h1 text-primary mb-8 border-b border-surface-variant pb-4">Event Details</h2>
+<div class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="input-floating">
+<input id="event_start" placeholder=" " required="" type="date"/>
+<label for="event_start">Event Start Date</label>
+</div>
+<div class="input-floating">
+<input id="event_end" placeholder=" " type="date"/>
+<label for="event_end">Event End Date (Optional)</label>
+</div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-4">Select Events to Cover</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<label class="flex items-center gap-3 cursor-pointer p-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Engagement</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer p-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Haldi / Mehendi</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer p-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Sangeet</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer p-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Wedding</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer p-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Reception</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer p-4 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface">Pre-Wedding</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Deliverables -->
+<section class="bg-surface-container-lowest p-8 lg:p-12 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-container-highest">
+<h2 class="font-headline-h1 text-headline-h1 text-primary mb-8 border-b border-surface-variant pb-4">Deliverables</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="input-floating">
+<input id="photo_count" min="0" placeholder=" " type="number" value="500"/>
+<label for="photo_count">Edited Photos (Approx)</label>
+</div>
+<div class="input-floating">
+<input id="cinematic_duration" min="0" placeholder=" " type="number" value="5"/>
+<label for="cinematic_duration">Cinematic Video (Mins)</label>
+</div>
+<div class="input-floating">
+<input id="reels_count" min="0" placeholder=" " type="number" value="3"/>
+<label for="reels_count">Social Media Reels</label>
+</div>
+<div class="input-floating md:col-span-3">
+<textarea id="deliverable_notes" placeholder=" " rows="3"></textarea>
+<label for="deliverable_notes">Additional Deliverable Notes (Albums, Framed Prints, etc.)</label>
+</div>
+</div>
+</section>
+<!-- Section: Payment Milestones -->
+<section class="bg-surface-container-lowest p-8 lg:p-12 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-surface-container-highest">
+<div class="flex justify-between items-center mb-8 border-b border-surface-variant pb-4">
+<h2 class="font-headline-h1 text-headline-h1 text-primary">Milestone Schedule</h2>
+<span class="font-headline-h2 text-headline-h2 text-secondary">₹ Total Package</span>
+</div>
+<div class="space-y-6 relative before:absolute before:inset-0 before:ml-[11px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-surface-variant">
+<!-- Milestone 1 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+<div class="flex items-center justify-center w-6 h-6 rounded-full border-2 border-secondary bg-surface-container-lowest z-10 text-secondary md:mx-auto shrink-0 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="w-[calc(100%-3rem)] md:w-[calc(50%-2rem)] p-4 bg-surface rounded-lg border border-outline-variant shadow-sm ml-4 md:ml-0 md:mr-0 group-odd:md:ml-auto group-even:md:mr-auto">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-h2 text-headline-h2 text-primary text-lg">Booking Advance</h3>
+<span class="font-label-sm text-label-sm text-secondary bg-secondary-fixed px-2 py-1 rounded">20%</span>
+</div>
+<div class="input-floating">
+<input id="ms_1_date" placeholder=" " type="date"/>
+<label for="ms_1_date">Due Date</label>
+</div>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-6 h-6 rounded-full border-2 border-outline-variant bg-surface-container-lowest z-10 text-outline-variant md:mx-auto shrink-0 shadow-sm">
+</div>
+<div class="w-[calc(100%-3rem)] md:w-[calc(50%-2rem)] p-4 bg-surface rounded-lg border border-outline-variant shadow-sm ml-4 md:ml-0 md:mr-0 group-odd:md:ml-auto group-even:md:mr-auto">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-h2 text-headline-h2 text-primary text-lg">Event Day</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-variant px-2 py-1 rounded">50%</span>
+</div>
+<div class="input-floating">
+<input id="ms_2_date" placeholder=" " type="date"/>
+<label for="ms_2_date">Due Date</label>
+</div>
+</div>
+</div>
+<!-- Milestone 3 -->
+<div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+<div class="flex items-center justify-center w-6 h-6 rounded-full border-2 border-outline-variant bg-surface-container-lowest z-10 text-outline-variant md:mx-auto shrink-0 shadow-sm">
+</div>
+<div class="w-[calc(100%-3rem)] md:w-[calc(50%-2rem)] p-4 bg-surface rounded-lg border border-outline-variant shadow-sm ml-4 md:ml-0 md:mr-0 group-odd:md:ml-auto group-even:md:mr-auto">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-h2 text-headline-h2 text-primary text-lg">Final Delivery</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-variant px-2 py-1 rounded">30%</span>
+</div>
+<div class="input-floating">
+<input id="ms_3_date" placeholder=" " type="date"/>
+<label for="ms_3_date">Due Date</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<div class="flex justify-end gap-4 pt-8">
+<button class="px-8 py-4 font-body-md text-body-md font-semibold text-primary border border-outline-variant rounded bg-transparent hover:bg-surface-variant transition-colors duration-200" type="button">Save Draft</button>
+<button class="px-8 py-4 font-body-md text-body-md font-semibold text-on-primary bg-primary rounded hover:bg-surface-tint hover:shadow-lg transition-all duration-200 active:scale-95 flex items-center gap-2" type="submit">
+                        Generate Contract
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</main>
+</body></html>

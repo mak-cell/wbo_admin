@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Weddingbellodisha - Worker Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#c8c6c5",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e5e2e1",
+                        "background": "#fbf9f8",
+                        "on-primary-fixed-variant": "#474646",
+                        "on-secondary-container": "#785a1a",
+                        "on-surface-variant": "#444748",
+                        "surface-tint": "#5f5e5e",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-high": "#e9e8e7",
+                        "surface-dim": "#dbdad9",
+                        "secondary-fixed": "#ffdea5",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#1a1c1b",
+                        "surface-bright": "#fbf9f8",
+                        "outline-variant": "#c4c7c7",
+                        "surface": "#fbf9f8",
+                        "inverse-surface": "#303031",
+                        "on-tertiary-fixed-variant": "#464746",
+                        "tertiary-fixed": "#e3e2e0",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#838482",
+                        "surface-variant": "#e4e2e2",
+                        "on-primary-fixed": "#1c1b1b",
+                        "secondary-fixed-dim": "#e9c176",
+                        "secondary-container": "#fed488",
+                        "on-background": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-tertiary-fixed": "#1a1c1b",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#775a19",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#858383",
+                        "outline": "#747878",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f5f3f3",
+                        "primary": "#000000",
+                        "tertiary-fixed-dim": "#c7c6c5",
+                        "surface-container-highest": "#e4e2e2",
+                        "inverse-on-surface": "#f2f0f0",
+                        "tertiary": "#000000",
+                        "surface-container": "#efeded",
+                        "on-secondary-fixed": "#261900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-page": "48px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "headline-h2": ["Playfair Display"],
+                        "label-sm": ["Manrope"],
+                        "headline-h1": ["Playfair Display"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-h2": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-h1": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .ambient-shadow {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col z-50 bg-primary dark:bg-primary shadow-2xl docked left-0 h-full w-64">
+<div class="px-6 py-8 flex flex-col items-center border-b border-primary-container">
+<img alt="Studio Logo" class="w-16 h-16 rounded-full mb-4 object-cover" data-alt="A close-up shot of a vintage professional camera lens reflecting soft, warm studio lighting. The aesthetic is high-end, crisp, and slightly nostalgic, perfectly capturing the essence of premium wedding photography within a curated gallery style. The background is a stark, minimal white, emphasizing the details of the camera gear." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqkVzt3e4hagMinGQrxrOuw1vmNSRgdJsZZGKI4nTYadfqdv0SSN3G1sGU3E-4b20OdST4_E22Kb2ukX0d7BeYbaiBxSHEuKQlM3JW_iBcUyWh0LbOc2ra-V32ARLgdwkrHv5zs5oJR3xONuYRTI5hMOoWdjjwC1CXOe6Gg-jD5PweH7tUXSmfrP_9ChVvJ05pV96woWwcKxlJaoWRnbeKX4Fvxomch-BYT6LSoT_akW8i34L2S5X_y5g6x8nMt_Z_zd4RaN-SYoPZ"/>
+<h1 class="font-display-lg text-headline-h2 text-on-primary dark:text-on-primary-fixed text-center">Weddingbell</h1>
+<p class="font-body-md text-label-sm text-on-primary-container mt-1">Odisha Studio</p>
+<button class="mt-6 w-full py-3 px-4 bg-on-primary text-primary rounded-lg font-label-sm text-label-sm font-semibold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Project
+            </button>
+</div>
+<div class="flex-1 py-6 flex flex-col gap-2">
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">camera_roll</span>
+<span>Projects</span>
+</a>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Financials</span>
+</a>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Team</span>
+</a>
+<a class="text-secondary font-bold border-r-4 border-secondary px-6 py-4 flex items-center gap-4 bg-primary-container scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event</span>
+<span>Calendar</span>
+</a>
+<a class="text-on-primary-container opacity-70 px-6 py-4 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="mt-auto border-t border-primary-container py-4 flex flex-col gap-2">
+<a class="text-on-primary-container opacity-70 px-6 py-3 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span>Support</span>
+</a>
+<a class="text-on-primary-container opacity-70 px-6 py-3 flex items-center gap-4 hover:opacity-100 transition-opacity hover:bg-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-gutter sticky top-0 z-40 bg-surface/80 backdrop-blur-md shadow-sm docked top-0 full-width bg-surface dark:bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<h2 class="font-display-lg text-headline-h1 text-primary dark:text-on-surface hidden md:block">Weddingbell</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full focus:ring-1 focus:ring-secondary font-body-md text-label-sm w-64 placeholder:text-on-surface-variant text-on-surface" placeholder="Search tasks..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer transition-all active:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer transition-all active:opacity-80 md:hidden">
+<span class="material-symbols-outlined">search</span>
+</button>
+<div class="flex items-center gap-3 cursor-pointer transition-all active:opacity-80 pl-4 border-l border-outline-variant">
+<img alt="Admin User" class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a young male creative professional. He has a slight smile, wearing a dark minimal t-shirt. The background is a clean, bright white studio setting. The lighting is soft and flattering, typical of a high-end photography studio, fitting a clean, light-mode minimalist UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVgZcCQmRUwt_eaD7oTS2dB4gZAnNE8NLezNmaVAE6WGiY0eBviiIMgKfcb1zwkGooeTI8eRckeRKHLA4i8zIIWftdZeuUCJg25SbhCYdezSh43929BbsZlPmTB-rie6eSpr1Wdg37Ri4542oOggpPe2WxuTE3iuQkV-gOznzuGE1jQHdoPg6yIuLQj_Q5A82MAv5ECJNVSwvUwgMGjyGE8EVYcAI2XrAeIRFz9j0TDE2jW50PaIdubtL9nggbxJa3P1xbTMFQkcF0"/>
+<span class="font-headline-h2 text-headline-h2 text-primary font-semibold hidden md:block text-[16px]">Profile</span>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-gutter max-w-container-max mx-auto w-full">
+<div class="mb-section-gap flex justify-between items-end border-b border-outline-variant pb-6">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">My Assignments</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Your curated task list and upcoming shoots.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 border border-secondary text-secondary rounded font-label-sm text-label-sm hover:bg-secondary hover:text-on-secondary transition-colors duration-200">
+                        View Full Calendar
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Timeline / Upcoming Section (Left Col) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<h2 class="font-headline-h1 text-headline-h2 text-on-surface border-b border-outline-variant pb-2">Upcoming Events</h2>
+<div class="relative pl-6 border-l border-secondary/30 space-y-8">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[29px] top-1 w-3 h-3 bg-secondary rounded-full border-2 border-surface"></div>
+<p class="font-headline-h2 text-label-sm text-secondary mb-1">TOMORROW, 09:00 AM</p>
+<h3 class="font-headline-h1 text-[20px] text-on-surface mb-1">Patel Engagement</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                The Taj, Mumbai
+                            </p>
+<div class="inline-flex px-2 py-1 bg-surface-container-highest text-on-surface-variant rounded font-label-sm text-[10px]">
+                                SHOOT
+                            </div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-[29px] top-1 w-3 h-3 bg-surface-variant rounded-full border-2 border-surface"></div>
+<p class="font-headline-h2 text-label-sm text-on-surface-variant mb-1">OCT 24, 04:00 PM</p>
+<h3 class="font-headline-h1 text-[20px] text-on-surface mb-1">Sharma Sangeet</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                Royal Palace, Jaipur
+                            </p>
+<div class="inline-flex px-2 py-1 bg-surface-container-highest text-on-surface-variant rounded font-label-sm text-[10px]">
+                                SHOOT
+                            </div>
+</div>
+</div>
+</div>
+<!-- Task Board Section (Right Col) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="flex justify-between items-center border-b border-outline-variant pb-2">
+<h2 class="font-headline-h1 text-headline-h2 text-on-surface">Active Deliverables</h2>
+<div class="flex gap-2">
+<button class="p-2 text-primary hover:text-secondary transition-colors"><span class="material-symbols-outlined">grid_view</span></button>
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors"><span class="material-symbols-outlined">list</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Task Card 1 -->
+<div class="bg-surface-bright border border-surface-variant rounded-lg p-6 ambient-shadow hover-lift flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-h2 text-[20px] text-on-surface">Mehta Wedding Edit</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant">Due: Oct 20</p>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    In Progress
+                                </span>
+</div>
+<p class="font-body-lg text-[14px] text-on-surface-variant mb-6 flex-1">
+                                First pass color correction and culling. Target delivery of 200 final edited photos. Focus on candid moments.
+                            </p>
+<div class="mt-auto border-t border-surface-variant pt-4 flex justify-between items-center">
+<div class="flex -space-x-2">
+<img alt="Editor" class="w-8 h-8 rounded-full border-2 border-surface object-cover" data-alt="A clean, bright headshot of a female creative professional in a light, high-key studio environment. She is looking directly at the camera with a neutral, professional expression. The image feels premium and editorial, fitting perfectly into a sophisticated, minimalist UI design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-BqFxrSw-OGQ59P3UWfsNersTpMrxgi531F0upCNRtCDJ0Aad7j7ulkgIHwzxaGQn0bcPULcuXx3tLRgUu62qyaTme9kOPH8zaiALlbAJEy7aBtE7ThY2cxoXFKIeaWH3TmiQDwi2VovLvbw9p8ju6teN5wicaSL0FF7GO6T85THmQvx5CgK6T27vTfMex5GV9BbTcpaJ0YVZvqKucJtaU5fvGvZd0pfJ6v9nuPrkO60piYFrtAytIbZYRXDHgzCk2YXkghs4lpO9"/>
+</div>
+<button class="text-secondary font-label-sm text-label-sm hover:underline">Update Status</button>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="bg-surface-bright border border-surface-variant rounded-lg p-6 ambient-shadow hover-lift flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-h2 text-[20px] text-on-surface">Singh Reception Highlights</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant">Due: Oct 22</p>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-label-sm text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-surface-tint"></span>
+                                    Pending
+                                </span>
+</div>
+<p class="font-body-lg text-[14px] text-on-surface-variant mb-6 flex-1">
+                                Create a 3-minute highlight reel from the reception footage. Include the first dance and speeches. Audio syncing required.
+                            </p>
+<div class="mt-auto border-t border-surface-variant pt-4 flex justify-between items-center">
+<div class="flex -space-x-2">
+<img alt="Video Editor" class="w-8 h-8 rounded-full border-2 border-surface object-cover" data-alt="A confident male professional, captured in a crisp, high-contrast black and white portrait. The background is a stark white, emphasizing the subject's features. The lighting is dramatic yet elegant, suitable for a premium gallery-style dashboard representing high-end creative talent." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzK2qiXUJ8bLCMa7VAS8MRKW9oguHsDMT7Oqe9kaVY7OtB4K_XFWPNHavwNprpYqtRdii5RBG1ZhnUaeMLhGYmB1Kd8D1h0LX5-3c5j0xb0s_naZFv1d1rFXpQw7BDiyzu9WU0IGjwzHBnQGjz0o_8HGy0U_P7gMycJt9tiT1IGCp1s-fwAqupjRogvuz7wlI4EjJL-H5UNJHU2RlQnOWcQMhGjC666WBswyX3oxkRZrSwFY5LUyYyfwYT41Y-G3NW0C9w8hkEg-bc"/>
+</div>
+<button class="text-secondary font-label-sm text-label-sm hover:underline">Start Task</button>
+</div>
+</div>
+<!-- Task Card 3 -->
+<div class="bg-surface-bright border border-surface-variant rounded-lg p-6 ambient-shadow hover-lift flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-h2 text-[20px] text-on-surface">Gupta Engagement Album</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant">Due: Oct 18</p>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-[#e8f5e9] text-[#2e7d32] rounded-full font-label-sm text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4caf50]"></span>
+                                    Review
+                                </span>
+</div>
+<p class="font-body-lg text-[14px] text-on-surface-variant mb-6 flex-1">
+                                Final client review for the 50-page printed album layout. Waiting on feedback for the cover photo selection.
+                            </p>
+<div class="mt-auto border-t border-surface-variant pt-4 flex justify-between items-center">
+<div class="flex -space-x-2">
+<span class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center text-label-sm font-label-sm text-on-surface-variant">AJ</span>
+</div>
+<button class="text-secondary font-label-sm text-label-sm hover:underline">View Feedback</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
