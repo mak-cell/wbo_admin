@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import Layout from '../components/Layout';
 import { Card, CardTitle, CardContent } from '../components/Card';
 import { colors, spacing, breakpoints, radius } from '../styles/designTokens';
+import { ApiService } from '../services/apiService';
+import { DashboardSummary, Project } from '../types';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -111,21 +113,42 @@ const ActivityItem = styled.div`
   }
 `;
 
+const LoadingPulse = styled.div`
+  color: ${colors.onSurface};
+  text-align: center;
+  padding: ${spacing[8]};
+  animation: ${fadeIn} 0.5s ease;
+`;
+
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [metrics] = useState({
-    activeProjects: 12,
-    totalRevenue: "₹ 8,50,000",
-    pendingPayments: "₹ 1,20,000",
-    activeWorkers: 8
-  });
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [recentProjects, setRecentProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for recent activity
-  const activities = [
-    { id: 1, title: "Rahul & Sneha Prewed", type: "New Project", date: "Today, 10:30 AM", status: "Active", link: "/projects/1" },
-    { id: 2, title: "Payment Received", type: "Milestone: Advance", date: "Yesterday", status: "Completed", link: "/payments" },
-    { id: 3, title: "Ankita Wedding Edit", type: "Task Assigned", date: "Yesterday", status: "Pending", link: "/tasks" },
-  ];
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const [summaryData, projectsData] = await Promise.all([
+          ApiService.getDashboard(),
+          ApiService.getProjects(),
+        ]);
+        setSummary(summaryData);
+        // Show latest 5 projects as recent activity
+        setRecentProjects(projectsData.slice(-5).reverse());
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
+  const formatCurrency = (amount: number) => {
+    return `₹ ${amount.toLocaleString('en-IN')}`;
+  };
 
   return (
     <Layout>
@@ -134,73 +157,85 @@ export default function Dashboard() {
         <p>Welcome back to Wedding Bell Odisha Dashboard</p>
       </PageHeader>
 
-      <MetricsGrid>
-        <AnimatedCard $delay="0.1s">
-          <MetricLabel>Active Projects</MetricLabel>
-          <MetricValue>{metrics.activeProjects}</MetricValue>
-          <CardContent>+2 from last month</CardContent>
-        </AnimatedCard>
-        <AnimatedCard $delay="0.2s">
-          <MetricLabel>Total Revenue</MetricLabel>
-          <MetricValue>{metrics.totalRevenue}</MetricValue>
-          <CardContent>This financial year</CardContent>
-        </AnimatedCard>
-        <AnimatedCard $delay="0.3s">
-          <MetricLabel>Pending Payments</MetricLabel>
-          <MetricValue style={{ color: colors.warning }}>{metrics.pendingPayments}</MetricValue>
-          <CardContent>From 4 clients</CardContent>
-        </AnimatedCard>
-        <AnimatedCard $delay="0.4s">
-          <MetricLabel>Active Team</MetricLabel>
-          <MetricValue>{metrics.activeWorkers}</MetricValue>
-          <CardContent>6 Shooters, 2 Editors on duty</CardContent>
-        </AnimatedCard>
-      </MetricsGrid>
+      {loading ? (
+        <LoadingPulse>Loading dashboard data...</LoadingPulse>
+      ) : (
+        <>
+          <MetricsGrid>
+            <AnimatedCard $delay="0.1s">
+              <MetricLabel>Active Projects</MetricLabel>
+              <MetricValue>{summary?.active_projects ?? 0}</MetricValue>
+              <CardContent>of {summary?.total_projects ?? 0} total</CardContent>
+            </AnimatedCard>
+            <AnimatedCard $delay="0.2s">
+              <MetricLabel>Total Revenue</MetricLabel>
+              <MetricValue>{formatCurrency(summary?.total_revenue ?? 0)}</MetricValue>
+              <CardContent>Payments received</CardContent>
+            </AnimatedCard>
+            <AnimatedCard $delay="0.3s">
+              <MetricLabel>Pending Payments</MetricLabel>
+              <MetricValue style={{ color: colors.warning }}>{formatCurrency(summary?.pending_payments ?? 0)}</MetricValue>
+              <CardContent>Outstanding balance</CardContent>
+            </AnimatedCard>
+            <AnimatedCard $delay="0.4s">
+              <MetricLabel>Delivered</MetricLabel>
+              <MetricValue>{summary?.completed_deliverables ?? 0}</MetricValue>
+              <CardContent>Projects delivered to clients</CardContent>
+            </AnimatedCard>
+          </MetricsGrid>
 
-      <ActivitySection>
-        <AnimatedCard $delay="0.5s">
-          <CardTitle>Recent Activity</CardTitle>
-          <ActivityList>
-            {activities.map((act) => (
-              <ActivityItem key={act.id} onClick={() => navigate(act.link)}>
-                <div className="details">
-                  <strong>{act.title}</strong>
-                  <span>{act.type} • {act.date}</span>
-                </div>
-                <div className="status">{act.status}</div>
-              </ActivityItem>
-            ))}
-          </ActivityList>
-        </AnimatedCard>
-        
-        <AnimatedCard $delay="0.6s">
-          <CardTitle>Quick Actions</CardTitle>
-          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
-            <button 
-              onClick={() => navigate("/intake-form")}
-              style={{ 
-              padding: spacing[3], 
-              background: colors.primary, 
-              color: '#000', 
-              border: 'none', 
-              borderRadius: radius.md,
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}>+ New Client Intake</button>
-            <button 
-              onClick={() => navigate("/payments")}
-              style={{ 
-              padding: spacing[3], 
-              background: 'transparent', 
-              color: colors.primary, 
-              border: `1px solid ${colors.primary}`, 
-              borderRadius: radius.md,
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}>Log Payment</button>
-          </CardContent>
-        </AnimatedCard>
-      </ActivitySection>
+          <ActivitySection>
+            <AnimatedCard $delay="0.5s">
+              <CardTitle>Recent Projects</CardTitle>
+              <ActivityList>
+                {recentProjects.length === 0 ? (
+                  <div style={{ color: colors.onSurface, opacity: 0.7, padding: spacing[4] }}>
+                    No projects yet. Create your first intake!
+                  </div>
+                ) : (
+                  recentProjects.map((project) => (
+                    <ActivityItem key={project.id} onClick={() => navigate(`/projects/${project.id}`)}>
+                      <div className="details">
+                        <strong>{project.client_name}</strong>
+                        <span>{project.event_title || "Wedding Coverage"} • {project.location}</span>
+                      </div>
+                      <div className="status">{project.status}</div>
+                    </ActivityItem>
+                  ))
+                )}
+              </ActivityList>
+            </AnimatedCard>
+            
+            <AnimatedCard $delay="0.6s">
+              <CardTitle>Quick Actions</CardTitle>
+              <CardContent style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
+                <button 
+                  onClick={() => navigate("/intake-form")}
+                  style={{ 
+                  padding: spacing[3], 
+                  background: colors.primary, 
+                  color: '#000', 
+                  border: 'none', 
+                  borderRadius: radius.md,
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}>+ New Client Intake</button>
+                <button 
+                  onClick={() => navigate("/payments")}
+                  style={{ 
+                  padding: spacing[3], 
+                  background: 'transparent', 
+                  color: colors.primary, 
+                  border: `1px solid ${colors.primary}`, 
+                  borderRadius: radius.md,
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}>Log Payment</button>
+              </CardContent>
+            </AnimatedCard>
+          </ActivitySection>
+        </>
+      )}
     </Layout>
   );
 }

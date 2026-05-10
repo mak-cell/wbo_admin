@@ -141,18 +141,20 @@ const StatusBadge = styled.div<{ status: string }>`
   
   background: ${({ status }) => {
     switch (status) {
-      case "DELIVERED": return 'rgba(16, 185, 129, 0.1)';
-      case "IN_PROGRESS": return 'rgba(59, 130, 246, 0.1)';
-      case "REVIEW": return 'rgba(139, 92, 246, 0.1)';
+      case "Delivered":
+      case "Completed": return 'rgba(16, 185, 129, 0.1)';
+      case "In Progress": return 'rgba(59, 130, 246, 0.1)';
+      case "Review": return 'rgba(139, 92, 246, 0.1)';
       default: return 'rgba(245, 158, 11, 0.1)';
     }
   }};
   
   color: ${({ status }) => {
     switch (status) {
-      case "DELIVERED": return colors.success;
-      case "IN_PROGRESS": return colors.info;
-      case "REVIEW": return '#c084fc'; // Purple
+      case "Delivered":
+      case "Completed": return colors.success;
+      case "In Progress": return colors.info;
+      case "Review": return '#c084fc'; // Purple
       default: return colors.warning;
     }
   }};
@@ -277,7 +279,7 @@ const Projects: React.FC = () => {
                 <EventTitle>{project.event_title || "Wedding Coverage"}</EventTitle>
               </div>
               <StatusBadge status={project.status}>
-                {project.status.replace("_", " ")}
+                {project.status}
               </StatusBadge>
             </CardHeader>
             

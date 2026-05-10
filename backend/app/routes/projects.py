@@ -9,6 +9,98 @@ from app.schemas.schemas import ProjectCreate, ProjectUpdate, ProjectResponse, D
 router = APIRouter(prefix="/projects", tags=["projects"])
 
 
+@router.get("/calendar/events", response_model=list[CalendarEventResponse])
+def get_calendar_events(db: Session = Depends(get_db)):
+    """Get all events AND deliverable deadlines formatted for the calendar view."""
+    calendar_events = []
+    
+    # --- Shoot / Wedding Events ---
+    events = db.query(Event).join(Project).all()
+    for event in events:
+        project = event.project
+        # Get workers assigned specifically to THIS event
+        workers = []
+        for task in event.assignments:
+            if task.worker and task.worker.name not in workers:
+                workers.append(task.worker.name)
+                
+        title = f"{project.client_name} - {event.event_type}"
+        
+        calendar_events.append(
+            CalendarEventResponse(
+                event_id=event.id,
+                project_id=project.id,
+                title=title,
+                event_type=event.event_type,
+                date=event.event_date,
+                location=project.location,
+                client_name=project.client_name,
+                status=project.status,
+                assigned_workers=workers,
+                source="event"
+            )
+        )
+    
+    # --- Deliverable Deadlines (only those with a due_date set) ---
+    deliverables = db.query(Deliverable).join(Project).filter(
+        Deliverable.due_date.isnot(None)
+    ).all()
+    
+    for deliverable in deliverables:
+        project = deliverable.project
+        title = f"{project.client_name} - {deliverable.description or deliverable.category}"
+        
+        # Get workers assigned to this deliverable
+        deliv_workers = []
+        for task in deliverable.assignments:
+            if task.worker and task.worker.name not in deliv_workers:
+                deliv_workers.append(task.worker.name)
+        
+        calendar_events.append(
+            CalendarEventResponse(
+                event_id=deliverable.id,
+                project_id=project.id,
+                title=title,
+                event_type=f"Deliverable: {deliverable.category}",
+                date=deliverable.due_date,
+                location=project.location,
+                client_name=project.client_name,
+                status=deliverable.status,
+                assigned_workers=deliv_workers,
+                source="deliverable"
+            )
+        )
+        
+    return calendar_events
+
+
+@router.get("/dashboard/summary", response_model=DashboardSummary)
+def dashboard_summary(db: Session = Depends(get_db)):
+    """Get dashboard summary with admin stats."""
+    total_projects = db.query(Project).count()
+    active_projects = db.query(Project).filter(
+        Project.status.in_([ProjectStatusEnum.IN_PROGRESS, ProjectStatusEnum.REVIEW])
+    ).count()
+    
+    # Calculate total revenue and pending payments
+    all_payments = db.query(Payment).all()
+    total_revenue = sum(p.amount for p in all_payments if p.is_paid)
+    pending_payments = sum(p.amount for p in all_payments if not p.is_paid)
+    
+    # Count completed/delivered deliverables
+    completed_deliverables = db.query(Deliverable).filter(
+        Deliverable.status.in_([ProjectStatusEnum.DELIVERED, ProjectStatusEnum.COMPLETED])
+    ).count()
+    
+    return DashboardSummary(
+        total_projects=total_projects,
+        active_projects=active_projects,
+        total_revenue=total_revenue,
+        pending_payments=pending_payments,
+        completed_deliverables=completed_deliverables,
+    )
+
+
 @router.post("/", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
 def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     """Create a new project (Intake Form)."""
@@ -19,6 +111,13 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     return db_project
 
 
+@router.get("/", response_model=list[ProjectResponse])
+def list_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """List all projects."""
+    projects = db.query(Project).offset(skip).limit(limit).all()
+    return projects
+
+
 @router.get("/{project_id}", response_model=ProjectResponse)
 def get_project(project_id: int, db: Session = Depends(get_db)):
     """Fetch project details."""
@@ -26,13 +125,6 @@ def get_project(project_id: int, db: Session = Depends(get_db)):
     if not db_project:
         raise HTTPException(status_code=404, detail="Project not found")
     return db_project
-
-
-@router.get("/", response_model=list[ProjectResponse])
-def list_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    """List all projects."""
-    projects = db.query(Project).offset(skip).limit(limit).all()
-    return projects
 
 
 @router.patch("/{project_id}", response_model=ProjectResponse)
@@ -77,11 +169,21 @@ def update_project(project_id: int, project_update: ProjectUpdate, db: Session =
         for deliverable_data in project_update.deliverables:
             if deliverable_data.id and deliverable_data.id in existing_deliverables:
                 deliverable = existing_deliverables[deliverable_data.id]
-                deliverable.category = deliverable_data.category
-                deliverable.details = deliverable_data.details
+                if deliverable_data.category is not None:
+                    deliverable.category = deliverable_data.category
+                if deliverable_data.description is not None:
+                    deliverable.description = deliverable_data.description
+                if deliverable_data.details is not None:
+                    deliverable.details = deliverable_data.details
+                if deliverable_data.status is not None:
+                    deliverable.status = deliverable_data.status
+                if deliverable_data.due_date is not None:
+                    deliverable.due_date = deliverable_data.due_date
                 incoming_deliverable_ids.append(deliverable.id)
             else:
-                new_deliverable = Deliverable(**deliverable_data.model_dump(exclude_unset=True))
+                dump = deliverable_data.model_dump(exclude_unset=True)
+                dump.pop("id", None)
+                new_deliverable = Deliverable(**dump)
                 db_project.deliverables.append(new_deliverable)
         for deliverable in list(db_project.deliverables):
             if deliverable.id and deliverable.id not in incoming_deliverable_ids:
@@ -107,63 +209,3 @@ def update_project(project_id: int, project_update: ProjectUpdate, db: Session =
     db.commit()
     db.refresh(db_project)
     return db_project
-
-
-@router.get("/calendar/events", response_model=list[CalendarEventResponse])
-def get_calendar_events(db: Session = Depends(get_db)):
-    """Get all events formatted for the calendar view."""
-    events = db.query(Event).join(Project).all()
-    calendar_events = []
-    
-    for event in events:
-        project = event.project
-        # Get assigned workers for this project
-        workers = []
-        for task in project.task_assignments:
-            if task.worker and task.worker.name not in workers:
-                workers.append(task.worker.name)
-                
-        title = f"{project.client_name} - {event.event_type}"
-        
-        calendar_events.append(
-            CalendarEventResponse(
-                event_id=event.id,
-                project_id=project.id,
-                title=title,
-                event_type=event.event_type,
-                date=event.event_date,
-                location=project.location,
-                client_name=project.client_name,
-                status=project.status,
-                assigned_workers=workers
-            )
-        )
-        
-    return calendar_events
-
-
-@router.get("/dashboard/summary", response_model=DashboardSummary)
-def dashboard_summary(db: Session = Depends(get_db)):
-    """Get dashboard summary with admin stats."""
-    total_projects = db.query(Project).count()
-    active_projects = db.query(Project).filter(
-        Project.status.in_([ProjectStatusEnum.IN_PROGRESS, ProjectStatusEnum.REVIEW])
-    ).count()
-    
-    # Calculate total revenue and pending payments
-    all_payments = db.query(Payment).all()
-    total_revenue = sum(p.amount for p in all_payments if p.is_paid)
-    pending_payments = sum(p.amount for p in all_payments if not p.is_paid)
-    
-    # Count completed deliverables
-    completed_deliverables = db.query(Project).filter(
-        Project.status == ProjectStatusEnum.DELIVERED
-    ).count()
-    
-    return DashboardSummary(
-        total_projects=total_projects,
-        active_projects=active_projects,
-        total_revenue=total_revenue,
-        pending_payments=pending_payments,
-        completed_deliverables=completed_deliverables,
-    )

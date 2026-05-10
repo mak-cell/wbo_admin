@@ -6,19 +6,7 @@ import { Card, CardTitle } from '../components/Card';
 import { Button } from '../components/Button';
 import { colors, spacing, radius } from '../styles/designTokens';
 import { ApiService } from '../services/apiService';
-import { ProjectStatus } from '../types';
-
-interface CalendarEvent {
-  event_id: number;
-  project_id: number;
-  title: string;
-  event_type: string;
-  date: string;
-  location: string;
-  client_name: string;
-  status: ProjectStatus;
-  assigned_workers: string[];
-}
+import { CalendarEvent } from '../types';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -124,8 +112,8 @@ const DayNumber = styled.span<{ $isToday: boolean }>`
   margin-bottom: ${spacing[2]};
 `;
 
-const EventChip = styled.div`
-  background: ${colors.primaryHover};
+const EventChip = styled.div<{ $source?: string }>`
+  background: ${({ $source }) => $source === 'deliverable' ? colors.info : colors.primaryHover};
   color: ${colors.background};
   font-size: 0.75rem;
   padding: 4px 8px;
@@ -331,9 +319,14 @@ export default function Calendar() {
                   {format(day, 'd')}
                 </DayNumber>
                 
-                {dayEvents.slice(0, 3).map(e => (
-                  <EventChip key={e.event_id}>{e.title}</EventChip>
-                ))}
+                {dayEvents.slice(0, 3).map(e => {
+                  const workerText = e.assigned_workers.length > 0 ? ` (${e.assigned_workers.join(', ')})` : '';
+                  return (
+                    <EventChip key={`${e.source}-${e.event_id}`} $source={e.source} title={`${e.title}${workerText}`}>
+                      {e.source === 'deliverable' ? '📦 ' : ''}{e.title}{workerText}
+                    </EventChip>
+                  );
+                })}
                 
                 {dayEvents.length > 3 && (
                   <MoreEventsIndicator>+{dayEvents.length - 3} more</MoreEventsIndicator>
@@ -357,17 +350,22 @@ export default function Calendar() {
             ) : (
               selectedDayEvents.map(event => (
                 <EventDetailCard key={event.event_id}>
-                  <CardTitle style={{ color: colors.primary, marginBottom: spacing[4], fontSize: '1.2rem' }}>
-                    {event.title}
-                  </CardTitle>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing[4] }}>
+                    <CardTitle style={{ color: event.source === 'deliverable' ? colors.info : colors.primary, fontSize: '1.2rem', margin: 0 }}>
+                      {event.source === 'deliverable' ? '📦 ' : '📅 '}{event.title}
+                    </CardTitle>
+                    <span style={{ fontSize: '0.7rem', padding: '3px 8px', borderRadius: '12px', fontWeight: 700, textTransform: 'uppercase', background: event.source === 'deliverable' ? 'rgba(59,130,246,0.15)' : 'rgba(212,175,55,0.15)', color: event.source === 'deliverable' ? colors.info : colors.primary }}>
+                      {event.source === 'deliverable' ? 'Deliverable' : 'Event'}
+                    </span>
+                  </div>
                   
                   <DetailRow>
-                    <strong>Project:</strong>
+                    <strong>Client:</strong>
                     <span>{event.client_name}</span>
                   </DetailRow>
                   
                   <DetailRow>
-                    <strong>Event Type:</strong>
+                    <strong>Type:</strong>
                     <span>{event.event_type}</span>
                   </DetailRow>
                   
@@ -379,8 +377,8 @@ export default function Calendar() {
                   <DetailRow>
                     <strong>Status:</strong>
                     <span style={{ 
-                      color: event.status === ProjectStatus.DELIVERED ? colors.info : 
-                             event.status === ProjectStatus.IN_PROGRESS ? colors.primary : colors.secondary 
+                      color: event.status === 'Delivered' || event.status === 'Completed' ? colors.success : 
+                             event.status === 'In Progress' ? colors.info : colors.warning 
                     }}>
                       {event.status}
                     </span>

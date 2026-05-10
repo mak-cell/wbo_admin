@@ -48,9 +48,12 @@ class EventResponse(EventBase):
 
 
 class DeliverableBase(BaseModel):
-    """Base deliverable schema."""
-    category: str
-    details: Dict[str, Any]
+    """Base deliverable schema (task-like structure)."""
+    category: str  # Photography, Videography, Pre-Wedding
+    description: Optional[str] = None  # "90 Edited Photos"
+    details: Optional[Dict[str, Any]] = None  # Structured data
+    status: ProjectStatusEnum = ProjectStatusEnum.PENDING
+    due_date: Optional[date] = None
 
 
 class DeliverableCreate(DeliverableBase):
@@ -130,6 +133,8 @@ class TaskAssignmentCreate(TaskAssignmentBase):
     """Task assignment creation schema."""
     worker_id: int
     project_id: int
+    event_id: Optional[int] = None
+    deliverable_id: Optional[int] = None
 
 
 class TaskAssignmentUpdate(BaseModel):
@@ -142,6 +147,8 @@ class TaskAssignmentResponse(TaskAssignmentBase):
     id: int
     worker_id: int
     project_id: int
+    event_id: Optional[int] = None
+    deliverable_id: Optional[int] = None
     
     class Config:
         from_attributes = True
@@ -171,24 +178,27 @@ class EventUpdate(BaseModel):
 
 
 class DeliverableUpdate(BaseModel):
-    """Deliverable update schema."""
+    """Deliverable update schema (task-like)."""
     id: Optional[int] = None
     category: Optional[str] = None
+    description: Optional[str] = None
     details: Optional[Dict[str, Any]] = None
+    status: Optional[ProjectStatusEnum] = None
+    due_date: Optional[date] = None
 
 
 class ProjectUpdate(BaseModel):
     """Project update schema with optional nested data."""
-    client_name: Optional[str]
-    event_title: Optional[str]
-    location: Optional[str]
-    contact_number: Optional[str]
-    instagram_reference: Optional[str]
-    total_budget: Optional[float]
-    status: Optional[ProjectStatusEnum]
-    events: Optional[List[EventUpdate]]
-    deliverables: Optional[List[DeliverableUpdate]]
-    payments: Optional[List[PaymentUpdate]]
+    client_name: Optional[str] = None
+    event_title: Optional[str] = None
+    location: Optional[str] = None
+    contact_number: Optional[str] = None
+    instagram_reference: Optional[str] = None
+    total_budget: Optional[float] = None
+    status: Optional[ProjectStatusEnum] = None
+    events: Optional[List[EventUpdate]] = None
+    deliverables: Optional[List[DeliverableUpdate]] = None
+    payments: Optional[List[PaymentUpdate]] = None
 
 
 class ProjectResponse(ProjectBase):
@@ -212,7 +222,7 @@ class DashboardSummary(BaseModel):
     completed_deliverables: int
 
 class CalendarEventResponse(BaseModel):
-    """Calendar event schema aggregating project and worker details."""
+    """Calendar item schema — covers both shoot events and deliverable deadlines."""
     event_id: int
     project_id: int
     title: str
@@ -221,7 +231,8 @@ class CalendarEventResponse(BaseModel):
     location: str
     client_name: str
     status: ProjectStatusEnum
-    assigned_workers: List[str]
+    assigned_workers: List[str] = []
+    source: str = "event"  # "event" or "deliverable"
 
     class Config:
         from_attributes = True

@@ -56,18 +56,23 @@ class Event(Base):
     event_date = Column(Date)
     
     project = relationship("Project", back_populates="events")
+    assignments = relationship("TaskAssignment", back_populates="event", cascade="all, delete-orphan")
 
 
 class Deliverable(Base):
-    """Deliverable model for project deliverables."""
+    """Deliverable model for project deliverables (acts as a trackable task)."""
     __tablename__ = "deliverables"
     
     id = Column(Integer, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"), index=True)
-    category = Column(String)  # Photos, Videos, Reels, Albums
-    details = Column(JSON)  # Store specific counts/sizes
+    category = Column(String)  # Photography, Videography, Pre-Wedding
+    description = Column(String, nullable=True)  # e.g. "90 Edited Photos"
+    details = Column(JSON, nullable=True)  # Structured data: {count: 90, type: "edited"}
+    status = Column(Enum(ProjectStatusEnum), default=ProjectStatusEnum.PENDING)
+    due_date = Column(Date, nullable=True)  # Deadline for calendar display
     
     project = relationship("Project", back_populates="deliverables")
+    assignments = relationship("TaskAssignment", back_populates="deliverable", cascade="all, delete-orphan")
 
 
 class Payment(Base):
@@ -100,14 +105,18 @@ class WorkerPayout(Base):
 
 
 class TaskAssignment(Base):
-    """Task assignment model for worker task management."""
+    """Task assignment model — links a worker to a specific event or deliverable."""
     __tablename__ = "task_assignments"
     
     id = Column(Integer, primary_key=True, index=True)
     worker_id = Column(Integer, ForeignKey("users.id"), index=True)
     project_id = Column(Integer, ForeignKey("projects.id"), index=True)
+    event_id = Column(Integer, ForeignKey("events.id"), nullable=True, index=True)
+    deliverable_id = Column(Integer, ForeignKey("deliverables.id"), nullable=True, index=True)
     task_description = Column(String)
     status = Column(Enum(ProjectStatusEnum), default=ProjectStatusEnum.PENDING)
     
     worker = relationship("User", back_populates="assignments")
     project = relationship("Project", back_populates="task_assignments")
+    event = relationship("Event", back_populates="assignments")
+    deliverable = relationship("Deliverable", back_populates="assignments")

@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Layout from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { colors, spacing, radius, breakpoints } from '../styles/designTokens';
+import { ApiService } from '../services/apiService';
+
+interface UserRecord {
+  id: number;
+  name: string;
+  contact: string;
+  role: string;
+  base_salary: number;
+  joining_date: string | null;
+}
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -102,13 +112,113 @@ const WorkerStats = styled.div`
   }
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${fadeIn} 0.2s ease;
+`;
+
+const ModalContent = styled(Card)`
+  width: 400px;
+  max-width: 90vw;
+  padding: ${spacing[6]};
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing[4]};
+
+  h3 {
+    font-size: 1.5rem;
+    color: ${colors.primary};
+    margin: 0;
+  }
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: ${colors.onSurface};
+  }
+
+  input, select {
+    padding: 10px 14px;
+    border-radius: ${radius.md};
+    border: 1px solid ${colors.border};
+    background: ${colors.surface};
+    color: ${colors.onBackground};
+    font-size: 0.95rem;
+
+    &:focus { outline: none; border-color: ${colors.primary}; }
+  }
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: ${spacing[8]};
+  color: ${colors.onSurface};
+  opacity: 0.7;
+  grid-column: 1 / -1;
+`;
+
 export default function Team() {
-  const [workers] = useState([
-    { id: 1, name: "Amit Kumar", role: "Lead Shooter", type: "SHOOTER", salary: "₹ 25,000/mo", joined: "Jan 2023", activeTasks: 2 },
-    { id: 2, name: "Priya Das", role: "Senior Editor", type: "EDITOR", salary: "₹ 30,000/mo", joined: "Mar 2023", activeTasks: 5 },
-    { id: 3, name: "Ramesh Singh", role: "Assistant Shooter", type: "SHOOTER", salary: "Per Shoot", joined: "Aug 2023", activeTasks: 1 },
-    { id: 4, name: "Suman Jena", role: "Cinematographer", type: "SHOOTER", salary: "₹ 35,000/mo", joined: "Feb 2022", activeTasks: 0 },
-  ]);
+  const [workers, setWorkers] = useState<UserRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newWorker, setNewWorker] = useState({ name: '', contact: '', role: 'Shooter', base_salary: 0 });
+  const [submitting, setSubmitting] = useState(false);
+
+  const fetchWorkers = async () => {
+    try {
+      const data = await ApiService.getUsers();
+      setWorkers(data);
+    } catch (err) {
+      console.error("Failed to load team data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkers();
+  }, []);
+
+  const handleAddWorker = async () => {
+    if (!newWorker.name || !newWorker.contact) {
+      alert("Name and Contact are required.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await ApiService.createUser(newWorker);
+      setShowAddModal(false);
+      setNewWorker({ name: '', contact: '', role: 'Shooter', base_salary: 0 });
+      await fetchWorkers();
+    } catch (err) {
+      console.error("Failed to add worker:", err);
+      alert("Failed to add worker. Contact number may already exist.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const formatSalary = (salary: number) => {
+    if (salary === 0) return "Per Shoot";
+    return `₹ ${salary.toLocaleString('en-IN')}/mo`;
+  };
 
   return (
     <Layout>
@@ -117,7 +227,7 @@ export default function Team() {
           <h1>HRMS & Team</h1>
           <p>Manage hierarchy, salaries, and assign tasks to shooters & editors.</p>
         </div>
-        <Button variant="primary">+ Add Worker</Button>
+        <Button variant="primary" onClick={() => setShowAddModal(true)}>+ Add Worker</Button>
       </PageHeader>
 
       <div style={{ marginBottom: spacing[6] }}>
@@ -125,45 +235,98 @@ export default function Team() {
           Active Roster
         </h3>
         <TeamGrid>
-          {workers.map(worker => (
-            <Card key={worker.id}>
-              <WorkerProfile>
-                <div className="avatar">
-                  {worker.name.charAt(0)}
-                </div>
-                <div className="info">
-                  <h4>{worker.name}</h4>
-                  <span>{worker.role}</span>
-                </div>
-              </WorkerProfile>
+          {loading ? (
+            <EmptyState>Loading team data...</EmptyState>
+          ) : workers.length === 0 ? (
+            <EmptyState>No team members yet. Click "+ Add Worker" to get started.</EmptyState>
+          ) : (
+            workers.map(worker => (
+              <Card key={worker.id}>
+                <WorkerProfile>
+                  <div className="avatar">
+                    {worker.name.charAt(0)}
+                  </div>
+                  <div className="info">
+                    <h4>{worker.name}</h4>
+                    <span>{worker.role}</span>
+                  </div>
+                </WorkerProfile>
 
-              <WorkerStats>
-                <div className="stat">
-                  <label>Base Pay</label>
-                  <strong>{worker.salary}</strong>
-                </div>
-                <div className="stat">
-                  <label>Joined</label>
-                  <strong>{worker.joined}</strong>
-                </div>
-                <div className="stat">
-                  <label>Active Tasks</label>
-                  <strong>{worker.activeTasks} Assignments</strong>
-                </div>
-                <div className="stat">
-                  <label>Type</label>
-                  <strong>{worker.type}</strong>
-                </div>
-              </WorkerStats>
-
-              <div style={{ display: 'flex', gap: spacing[2] }}>
-                <Button variant="outline" style={{ flex: 1, padding: spacing[2], fontSize: '0.8rem' }}>Assign Task</Button>
-                <Button variant="secondary" style={{ flex: 1, padding: spacing[2], fontSize: '0.8rem' }}>Pay Salary</Button>
-              </div>
-            </Card>
-          ))}
+                <WorkerStats>
+                  <div className="stat">
+                    <label>Base Pay</label>
+                    <strong>{formatSalary(worker.base_salary)}</strong>
+                  </div>
+                  <div className="stat">
+                    <label>Joined</label>
+                    <strong>{worker.joining_date || "N/A"}</strong>
+                  </div>
+                  <div className="stat">
+                    <label>Contact</label>
+                    <strong>{worker.contact}</strong>
+                  </div>
+                  <div className="stat">
+                    <label>ID</label>
+                    <strong>#{worker.id}</strong>
+                  </div>
+                </WorkerStats>
+              </Card>
+            ))
+          )}
         </TeamGrid>
       </div>
+
+      {/* Add Worker Modal */}
+      {showAddModal && (
+        <ModalOverlay onClick={() => setShowAddModal(false)}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+            <h3>Add Team Member</h3>
+            <FormGroup>
+              <label>Full Name *</label>
+              <input
+                type="text"
+                value={newWorker.name}
+                onChange={e => setNewWorker({ ...newWorker, name: e.target.value })}
+                placeholder="e.g. Amit Kumar"
+              />
+            </FormGroup>
+            <FormGroup>
+              <label>Contact Number *</label>
+              <input
+                type="tel"
+                value={newWorker.contact}
+                onChange={e => setNewWorker({ ...newWorker, contact: e.target.value })}
+                placeholder="e.g. 9876543210"
+              />
+            </FormGroup>
+            <FormGroup>
+              <label>Role</label>
+              <select
+                value={newWorker.role}
+                onChange={e => setNewWorker({ ...newWorker, role: e.target.value })}
+              >
+                <option value="Admin">Admin</option>
+                <option value="Shooter">Shooter</option>
+                <option value="Editor">Editor</option>
+              </select>
+            </FormGroup>
+            <FormGroup>
+              <label>Base Salary (₹/month, 0 for per-shoot)</label>
+              <input
+                type="number"
+                value={newWorker.base_salary}
+                onChange={e => setNewWorker({ ...newWorker, base_salary: Number(e.target.value) })}
+              />
+            </FormGroup>
+            <div style={{ display: 'flex', gap: spacing[3], justifyContent: 'flex-end', marginTop: spacing[2] }}>
+              <Button variant="secondary" type="button" onClick={() => setShowAddModal(false)}>Cancel</Button>
+              <Button variant="primary" type="button" onClick={handleAddWorker} disabled={submitting}>
+                {submitting ? 'Adding...' : 'Add Worker'}
+              </Button>
+            </div>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </Layout>
   );
 }

@@ -96,9 +96,7 @@ const Tasks: React.FC = () => {
     newStatus: string
   ) => {
     try {
-      await ApiService.patch(`/worker/tasks/${taskId}`, {
-        status: newStatus,
-      });
+      await ApiService.updateTaskStatus(taskId, newStatus);
       setTasks(
         tasks.map((t) => (t.id === taskId ? { ...t, status: newStatus as ProjectStatus } : t))
       );

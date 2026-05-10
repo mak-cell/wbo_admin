@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -197,7 +197,7 @@ export default function IntakeForm() {
         contact_number: combinedContact,
         instagram_reference: reference,
         total_budget: finalPrice,
-        status: "PENDING"
+        status: "Pending"
       };
       
       const project = await ApiService.createProject(projectData);
@@ -217,11 +217,21 @@ export default function IntakeForm() {
         };
       });
 
-      // Deliverables Payload
-      const deliverablePayload = [{
-        category: "Complete Package Details",
-        details: deliverables
-      }];
+      // Deliverables Payload — each item is a trackable task
+      const deliverablePayload: any[] = [
+        { category: "Photography", description: `${deliverables.editedPhotos} Edited Photos`, details: { count: deliverables.editedPhotos }, status: "Pending" },
+        { category: "Photography", description: `${deliverables.albumsCount} Albums (${deliverables.albumSize}, ${deliverables.albumPages} pages)`, details: { count: deliverables.albumsCount, size: deliverables.albumSize, pages: deliverables.albumPages }, status: "Pending" },
+        { category: "Photography", description: `${deliverables.photoFrames} Photo Frames (${deliverables.photoFrameSize})`, details: { count: deliverables.photoFrames, size: deliverables.photoFrameSize }, status: "Pending" },
+        { category: "Videography", description: `Traditional Video (${deliverables.tradVideoHours})`, details: { duration: deliverables.tradVideoHours }, status: "Pending" },
+        { category: "Videography", description: `Cinematics (${deliverables.cinematics})`, details: { duration: deliverables.cinematics }, status: "Pending" },
+        { category: "Videography", description: `${deliverables.teaser} Teaser`, details: { count: deliverables.teaser }, status: "Pending" },
+        { category: "Videography", description: `${deliverables.highlight} Highlight`, details: { count: deliverables.highlight }, status: "Pending" },
+        { category: "Videography", description: `${deliverables.reelsCount} Reels`, details: { count: deliverables.reelsCount }, status: "Pending" },
+        { category: "Pre-Wedding", description: `Pre-Wedding Video (${deliverables.prewedVideo})`, details: { duration: deliverables.prewedVideo }, status: "Pending" },
+        { category: "Pre-Wedding", description: `${deliverables.prewedCinematicReel} Cinematic Reel`, details: { count: deliverables.prewedCinematicReel }, status: "Pending" },
+        { category: "Pre-Wedding", description: `${deliverables.prewedSaveDateReel} Save the Date Reel`, details: { count: deliverables.prewedSaveDateReel }, status: "Pending" },
+        { category: "Pre-Wedding", description: `Pre-Wedding Album (${deliverables.prewedAlbum})`, details: { spec: deliverables.prewedAlbum }, status: "Pending" },
+      ];
 
       // Payments Payload
       const paymentsPayload = [
